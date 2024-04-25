@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<style>
+
+</style>
+
+<main>
+<h2>{{ campeonato.nombre }}</h2>
+{{ campeonato.tipo }}
+{% if campeonato.tipo == '4' %}
+{% endif %}
+    {% for i in cuatro %}
+        <select class="form-select" id="buscar_deporte{{ i }}" name="buscar_deporte{{ i }}">
+            <option value="">Filtrar por deporte</option>
+            <option value="i">i</option>
+        </select>
+    {% endfor %}
+</main>
+{% endblock  %}

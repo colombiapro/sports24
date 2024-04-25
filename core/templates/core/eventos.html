@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<style>
+  .custom-card {
+    background: linear-gradient(to right, #0000002e, #01010187); /* Difuminado de gris claro a gris oscuro */
+    color: #fff; /* Texto blanco */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px 0 rgba(5, 5, 5, 0.2), 0 6px 20px 0 rgba(2, 2, 2, 0.19); /* Sombra alrededor de la tarjeta */
+    padding: 20px; /* Espaciado interno */
+    transition: 0.3s; /* Transición suave para el hover */
+  }
+  .custom-card:hover {
+  box-shadow: 0 8px 16px 0 rgba(250, 247, 247, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+  }
+
+</style>
+
+  <main class="px-8">
+    {% if request.user.is_authenticated and user.tipo == 'A' %}
+    <section class="py-5 text-center">
+      <div class="container">
+        <div class="row py-lg-5">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <h1 class="fw-light mb-4">Gestor de Eventos</h1>
+            <form action="{% url 'create_event' %}" method="POST" class="row g-3 justify-content-center" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="nombre_ev" placeholder="Nombre del Evento" maxlength="20" required>
+              </div>
+              <div class="col-md-6">
+                <input type="date"  class="form-control" name="fecha" required>
+              </div>
+              <div class="col-md-6">
+                <input type="time" class="form-control" name="hora" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="lugar" placeholder="Lugar" required>
+              </div>
+              <div class="col-md-6">
+                <textarea class="form-control" name="descripcion" rows="3" placeholder="Descripción del Evento" maxlength="250" required></textarea>
+                <small class="text">Máximo 200 caracteres.</small>
+
+              </div>
+              <div class="col-md-8">
+                Seleccione una imagen para su evento (OPCIONAL) <br> Dimensiones recomendadas: 500x450
+                <input type="file" class="form-control" name="imagen" accept="image/*" >
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary">Crear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <div class="container mt-0">
+    <div class="row flex-wrap">
+        <div class="col-md-auto">
+            <h2>Buscador</h2>
+        </div>
+        <div class="col-md-auto">
+            <form method="GET" action="{% url 'lista_eventos' %}" class="d-flex">
+                <input class="form-control me-4" type="text" name="buscar_evento" placeholder="Buscar..." value="{{ request.GET.buscar_evento}}">
+                <input class="form-control me-4" type="date" name="buscar_fecha" placeholder="Buscar por fecha...">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<br><br>
+  <div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for evento in eventos %}
+      {% if evento.estado == 'activo' %}
+      <div class="col">
+        <div class="card custom-card">
+          <div class="card-body">
+            <h3 class="card-title text-white">{{ evento.nombre_ev }}</h3>
+            <p class="card-text text-white">{{ evento.fecha }}</p>
+            <p class="card-text text-white">{{ evento.hora }}</p>
+            <p class="card-text text-white">{{ evento.lugar }}</p>
+            <p class="card-text text-white">{{ evento.descripcion }}</p>
+            <div class="col-md-12 text-center">
+              {% if evento.imagen %}
+              <img src="{{ evento.imagen.url }}" class="img-fluid" alt="Imagen del evento " sstyle="max-height: 350px; width: auto; object-fit: contain;">
+              {% else %}
+              <p>No hay imagen disponible</p>
+              {% endif %}
+            </div> 
+              {% if request.user.is_authenticated and user.tipo == 'A' %}
+              <br>
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+              
+              <a href="{% url 'edit_event' evento.id %}" class="btn btn-primary">Editar</a>
+              <form action="{% url 'delete_event' evento.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger">Borrar</button>
+              </form>
+            </div>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+ </main>
+{% endblock %}

@@ -1,0 +1,130 @@
+<main class="px-3">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-12 mx-auto">
+        <h3 class="fw-light">Aceptar a los inscritos por Selección</h3>
+      </div>
+    </div>
+    <div class="container mt-0">
+        <div class="row flex-wrap">
+            <div class="col-md-auto">
+                <h2>Buscador</h2>
+            </div>
+            <div class="col-md-auto">
+                <form method="GET" action="{% url 'buscar_aspirante_aceptarr' %}" class="d-flex">
+                    <input class="form-control me-2" type="text" name="buscar_aspirante_aceptar_nombre" placeholder="Código o nombre">
+                    <select class="form-control me-2" id="deporte" name="buscar_aspirante_aceptar_deporte">
+                        <!-- Las opciones se poblarán aquí -->
+                        <option value="">Selección...</option>
+                        {% for deporte in deportes %}
+                            <option value="{{ deporte.idDeporte }}"> {{deporte.nombre_dep}} </option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Lista Rol -->
+                <h2>Inscritos</h2>
+               <!---- <form method="POST" action="/inscripcion/">-->
+                    <table class="table table-bordered text-white bg-dark">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Sexo</th>
+                                <th>Edad</th>
+                                <th>Email</th>
+                                <th>Programa</th>
+                                <th>Semestre</th>
+                                <th>Selección</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios %}
+                            {% if usuario.estado == 'pendiente' %}
+                            <tr>
+                                <td>{{ usuario.codigo }}</td>
+                                <td>{{ usuario.nombre }}</td>
+                                <td>{{ usuario.sexo }}</td>
+                                <td>{{ usuario.edad }}</td>
+                                <td>{{ usuario.email }}</td>
+                                <td>{{ usuario.programa }}</td>
+                                <td>{{ usuario.semestre }}</td>
+                                <td>{{ usuario.seleccion }}</td>
+                                <td>
+                                    
+                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                        <form action="{% url 'actualizar_aspirantes' usuario.codigo %}" method="POST">
+                                          {% csrf_token %}
+                                          <button class="btn btn-success">Aceptar</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <h2>Aceptados</h2>
+                         <table class="table table-bordered text-white bg-dark">
+                             <thead>
+                                 <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Sexo</th>
+                                    <th>Edad</th>
+                                    <th>Email</th>
+                                    <th>Programa</th>
+                                    <th>Semestre</th>
+                                    <th>Selección</th>
+                                    <th>Estado</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 {% for usuario in usuarios %}
+                                 {% if usuario.estado == 'aceptado' %}
+                                 <tr>
+                                    <td>{{ usuario.codigo }}</td>
+                                    <td>{{ usuario.nombre }}</td>
+                                    <td>{{ usuario.sexo }}</td>
+                                    <td>{{ usuario.edad }}</td>
+                                    <td>{{ usuario.email }}</td>
+                                    <td>{{ usuario.programa }}</td>
+                                    <td>{{ usuario.semestre }}</td>
+                                    <td>{{ usuario.seleccion }}</td>
+                                     <td>
+                                         {% if usuario.estado == 'pendiente' %}
+                                         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                             <form action="{% url 'actualizar_aspirantes' usuario.codigo %}" method="POST">
+                                               {% csrf_token %}
+                                               <button class="btn btn-success">Aceptar</button>
+                                             </form>
+                                           </div>
+                                         {% else %} 
+                                         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                             <form action="{% url 'actualizar_aspirantes' usuario.codigo %}" method="POST">
+                                               {% csrf_token %}
+                                               <button class="btn btn-danger">Eliminar</button>
+                                             </form>
+                                           </div>
+                                         {% endif %}  
+                                     </td>
+                                 </tr>
+                                 {% endif %}
+                                 {% endfor %}
+                             </tbody>
+                         </table>    
+
+
+                
+            </div>
+        </div>
+    </div>
+    
+  </main>

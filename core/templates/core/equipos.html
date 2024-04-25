@@ -1,0 +1,114 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+  .escudo-container {
+  position: absolute;
+  top: 50%;
+  right: 20px; /* Ajusta la posición según sea necesario */
+  transform: translateY(-50%);
+  }
+
+  .escudo {
+    max-width: 100px; /* Ajusta el tamaño máximo de la imagen según sea necesario */
+  }
+
+  .equipo_carta {
+    background: linear-gradient(to right, #f5f5f52e, #e0e0e087); /* Difuminado de gris claro a gris oscuro */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /* Sombra alrededor de la tarjeta */
+    transition: 0.3s; /* Transición suave para el hover */
+  }
+
+  .equipo_carta:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+  }
+
+  .equipo_carta-body {
+    padding: 2px 16px; /* Espaciado interno del cuerpo de la tarjeta */
+  }
+
+</style>
+<main class="px-8">
+    {% if request.user.is_authenticated %}
+    <section class="py-5 text-center">
+      <div class="container">
+        <div class="row py-lg-5">
+          <div class="col-lg-8 col-md-10 mx-auto"> 
+            <h2 class="fw-light mb-4">¡Crea tu propio equipo!</h2>
+            <form action="{% url 'create_team' %}" method="POST" class="row g-3 justify-content-center" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="nombre_eq" placeholder="Nombre del Equipo" maxlength="20" required>
+              </div>
+              <div class="col-md-6">
+                <input type="number" placeholder="Cantidad de integrantes" class="form-control" name="num_integrantes" required min="5" max="15" >
+              </div>
+              <div class="mb-3">
+                <label for="idDeporte" class="form-label text-white"><strong>Deporte:</strong></label>
+                <select class="form-select" id="idDeporte" name="idDeporte">
+                    {% for evento in deportes %}
+                    <option value="{{ evento.idDeporte }}"> {{evento.nombre_dep}} </option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-8">
+                Seleccionar un escudo de equipo (OPCIONAL) <br> Dimensiones recomendadas: 515x512
+                <input type="file" class="form-control" name="escudo" accept="image/*" >
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary">Crear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <!--<div class="container mt-0">
+    <div class="row flex-wrap">
+        <div class="col-md-auto">
+            <h2>Buscador</h2>
+        </div>
+        <div class="col-md-auto">
+            <form method="GET" action="{% url 'lista_eventos' %}" class="d-flex">
+                <input class="form-control me-4" type="text" name="buscar_evento" placeholder="Buscar...">
+                <input class="form-control me-4" type="date" name="buscar_fecha" placeholder="Buscar por fecha...">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+</div>-->
+<h3>Tus Equipos</h3>
+<br><br>
+
+  <div class="container">
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        
+      {% for equipo in equipos %}
+        {% if equipo.lider == request.user.codigo %}
+          <div class="col">
+            <div class="card equipo_carta">
+              <div class="card-body d-flex justify-content-between equipo_carta">
+                <div>
+                  <h3 class="card-title text-dark">{{ equipo.nombre_eq }}</h3>
+                  <p class="card-text text-dark"><strong>N: </strong>{{ equipo.num_integrantes }} Integrantes</p>
+                  <h2 class="card-title text-dark">{{ equipo.deporte }}</h2>
+                  <small class="card-title text-dark"> Creado: {{equipo.fecha_creacion}} </small>
+                </div>
+
+                <div class="escudo-container"> <!-- Contenedor para la imagen del escudo -->
+                  <img src="{{ equipo.escudo.url }}" class="escudo" alt="Escudo del equipo"> <!-- Imagen del escudo -->
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+ </main>
+
+{% endblock %}

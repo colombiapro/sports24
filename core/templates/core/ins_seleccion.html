@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+
+{% if user.tipo == 'E' %}
+    {% include 'Inscripción/Einscrip.html' %}
+{% else %}
+    {% include 'Inscripción/Cinscrip.html' %}
+{% endif %}
+
+{% endblock %}

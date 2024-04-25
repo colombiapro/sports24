@@ -1,0 +1,153 @@
+{% load static %}
+<style>
+    .verde-formulario {
+        background-color: #419644; /* Este es un tono de verde, puedes ajustarlo a tu gusto */
+        background: linear-gradient(to right, #419644, #1e7120); /* Difuminado de gris claro a gris oscuro */
+        color: white; /* Esto hará que el texto sea blanco */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+
+    }
+    .futbol {
+        background-color: #df6262;
+        background: linear-gradient(to right, #df6262, #ff000087); /* Difuminado de gris claro a gris oscuro */
+        color: rgb(0, 0, 0);
+        box-shadow: 0 4px 8px rgba(255, 0, 0, 0.1); /* Sombra */
+        transition: 0.3s; /* Transición suave para el hover */
+
+
+    }
+    .futbol:hover{
+        box-shadow: 0 8px 16px 0 rgba(250, 247, 247, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+
+    }
+
+    .baloncesto {
+        background-color: #84c1d5; /* Azulito celeste */
+        background: linear-gradient(to right, #84c1d5, #00bfffff); /* Difuminado de gris claro a gris oscuro */
+        color: rgb(0, 0, 0);
+        box-shadow: 0 4px 8px rgba(3, 154, 255, 0.1); /* Sombra */
+        transition: 0.3s; /* Transición suave para el hover */
+
+
+    }
+    .baloncesto:hover{
+        box-shadow: 0 8px 16px 0 rgba(250, 247, 247, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+    }
+
+    .voleibol {
+        background-color: #a1e837; /* Amarillo verdoso */
+        background: linear-gradient(to right, #bae37d, #99fc03); /* Difuminado de gris claro a gris oscuro */
+        color: rgb(0, 0, 0);
+        box-shadow: 0 4px 8px rgba(128, 255, 0, 0.1); /* Sombra */
+        transition: 0.3s; /* Transición suave para el hover */
+    }
+
+    .voleibol:hover{
+        box-shadow: 0 8px 16px 0 rgba(250, 247, 247, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+    }
+</style>
+
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="color: red;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<main>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card verde-formulario rounded-3 shadow">
+                <div class="card-body p-5">
+                    <form action="{% url 'crear_campeonato' %}" method="post">
+                        {% csrf_token %}
+                        <h2 class="mb-3 text-center text-white">Crear Campeonato</h2>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label text-white"><strong>Nombre del Campeonato (nombre unico):</strong> </label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" maxlength="20" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="idDeporte" class="form-label text-white"><strong>Deporte:</strong></label>
+                            <select class="form-select" id="idDeporte" name="idDeporte">
+                                {% for evento in deportes %}
+                                <option value="{{ evento.idDeporte }}"> {{evento.nombre_dep}} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label text-white"><strong>Tipo de Campeonato:</strong></label>
+                            <select class="form-select" id="tipo" name="tipo">
+                                <!-- Aquí puedes agregar las opciones de tipo dinámicamente -->
+                                <option value=4>4 Participantes</option>
+                                <option value=8>8 Participantes</option>
+                                <!-- etc. -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_inicio" class="form-label text-white"><strong>Fecha de Inicio (anticipación de 7 dias):</strong></label>
+                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label text-white"><strong>Descripción del campeonato (opcional):</strong></label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="5" maxlength="300">
+                            </textarea>
+                            <small class="text">Máximo 300 caracteres.</small>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg btn-block">Crear Campeonato</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-0">
+    <div class="row flex-wrap">
+        <div class="col-md-auto">
+            <h2>Buscador</h2>
+        </div>
+        <div class="col-md-auto">
+            <form method="GET" action="{% url 'lista_campeonatos' %}" class="d-flex">
+                <input class="form-control me-4" type="text" name="buscar_evento" placeholder="Buscar..." value="{{ request.GET.buscar_evento}}">
+                <input class="form-control me-4" type="date" name="buscar_fecha" placeholder="Buscar por fecha...">
+                <select class="form-select" id="buscar_deporte" name="buscar_deporte">
+                    <option value=""> Filtar por deporte </option>
+                    {% for evento in deportes %}
+                    <option value="{{evento.idDeporte}}"> {{evento.nombre_dep}} </option>
+                    {% endfor %}
+                </select>
+                <br>
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+<br>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for campeonato in campeonatos %}
+        <div class="col">
+        <div class="card {{ campeonato.idDeporte.nombre_dep|lower }}">
+            <div class="card-body">
+                <h3 class="card-title">{{ campeonato.nombre }}</h3>
+                <p class="card-text">Participantes maximos: <strong>{{ campeonato.tipo }}</strong></p>
+                <p class="card-text">Cupos restantes: <strong>{{ campeonato.cupos_disponibles }}</strong></p>
+                <p class="card-text">Inicio: <strong>{{ campeonato.fecha_inicio }}</strong></p>
+                <p class="card-text">{{campeonato.descripcion}} </p>
+                <h4 class="card-text"><strong>{{campeonato.idDeporte }}</strong></h4>
+            {% if user.tipo == 'A' %}
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <a href="{% url 'aceptar_equipo_acampeonato' campeonato.id %}" class="btn btn-primary">Aceptar Equipos</a>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</main>

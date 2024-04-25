@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+ 
+ {% block content %}
+ <main class="px-3">
+    <section class="py-5 text-center">
+      <div class="container">
+        <div class="row py-lg-5">
+          <div class="col-lg-6 col-md-12 mx-auto">
+            <h1 class="fw-light">Inscripción a Campeonato  {{ campeonato.nombre }}</h1>
+            <h3 class="fw-light">Fecha Inicio:  {{ campeonato.fecha_inicio }}</h3>
+            <br>
+            <h5 class="fw-light"> {{ campeonato.descripcion }}</h5>
+
+          </div>
+        </div>
+        <div class="main_form">
+          <form action="{% url 'actualizar_equipo' campeonato.id %}" method="POST">
+            {% csrf_token %}
+            <p>Selecciona a tu equipo de {{campeonato.idDeporte}} </p>
+            <select class="form-select" id="buscar_deporte" name="equipo">
+                {% for equipo in equipos %}
+                  {% if equipo.deporte == campeonato.idDeporte %}
+                    <option value="{{equipo.id}}"> Nombre: {{equipo.nombre_eq}} — Integrantes: {{equipo.num_integrantes}} — Creación del equipo: {{equipo.fecha_creacion}} </option>
+                  {% endif %}
+                {% endfor %}
+            </select>
+            <!---{{ forms.as_p }}-->
+            <!--{% for form in forms %}
+            <div class="mb-3">
+              <label for="{{ form.id_for_label }}">{{ form.label }}</label>
+              <input type="{{ form.field.widget.input_type }}" name="{{ form.name }}" class="form-control" placeholder="{{ form.label }}" value="{{ form.value | default:'' }}">
+            </div>
+            <div class="text-danger">
+              {{ form.errors }}
+            </div>
+            {% endfor %}-->
+            <br>
+            <div class="mb-3">
+               
+              <input type="submit" class="btn btn-primary" value="Guardar Cambios">
+              
+              <a href="{% url 'eventos' %}" class="btn btn-secondary" role="button">Cancelar</a>
+            </div>
+          </form>
+          <br>
+        </div>
+      </div>
+    </section>
+  </main>
+ {% endblock  %}
+    

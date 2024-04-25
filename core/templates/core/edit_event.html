@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <main class="px-3">
+    <section class="py-5 text-center">
+      <div class="container">
+        <div class="row py-lg-5">
+          <div class="col-lg-6 col-md-12 mx-auto">
+            <h1 class="fw-light">Gestor de Eventos - Editar Evento</h1>
+          </div>
+        </div>
+        <div class="main_form">
+          <form method="POST">
+            {% csrf_token %}
+
+            {{ forms.as_p }}
+            <!--{% for form in forms %}
+            <div class="mb-3">
+              <label for="{{ form.id_for_label }}">{{ form.label }}</label>
+              <input type="{{ form.field.widget.input_type }}" name="{{ form.name }}" class="form-control" placeholder="{{ form.label }}" value="{{ form.value | default:'' }}">
+            </div>
+            <div class="text-danger">
+              {{ form.errors }}
+            </div>
+            {% endfor %}-->
+            <div class="mb-3">
+              <input type="submit" class="btn btn-primary" value="Guardar Cambios">
+              <a href="{% url 'eventos' %}" class="btn btn-secondary" role="button">Cancelar</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+
+  </main>
+
+{% endblock %}

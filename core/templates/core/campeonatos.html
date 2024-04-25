@@ -1,0 +1,9 @@
+{% extends 'core/base.html' %}
+{% block content %}
+{% if user.tipo == 'A' %}
+    {% include 'campeonatos/Acampeonato.html' %}
+{% else %}
+    {% include 'campeonatos/Ecampeonato.html' %}
+{% endif %}
+
+{% endblock %}

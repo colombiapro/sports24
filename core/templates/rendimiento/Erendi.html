@@ -1,0 +1,53 @@
+<main>
+    {% if user.seleccion != None %}
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 g-4"> <!-- Añade esta línea -->
+            {% for rendimiento in rendimientos %}
+            <div class="col"> <!-- Añade esta línea -->
+                <div class="card h-100"> <!-- Añade 'h-100' aquí -->
+                    <div class="row g-0">
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title text-dark">{{ rendimiento.fecha }}</h5>
+                                <p class="card-text text-dark">
+                                {% if user.seleccion == 'Futbol' %}
+                                    Velocidad: {{ rendimiento.campo1 }}<br>
+                                    Regate: {{ rendimiento.campo2 }}<br>
+                                    Resistencia: {{ rendimiento.campo3 }}<br>
+                                    Ritmo: {{ rendimiento.campo4 }}<br>
+                                    Defensa: {{ rendimiento.campo5 }}<br>
+                                {% elif user.seleccion == 'Baloncesto' %}
+                                    Salto Vertical: {{ rendimiento.campo1 }}<br>
+                                    Tiro Triple: {{ rendimiento.campo2 }}<br>
+                                    Velocidad: {{ rendimiento.campo3 }}<br>
+                                    Tiro Doble: {{ rendimiento.campo4 }}<br>
+                                    Bloqueo: {{ rendimiento.campo5 }}<br>
+                                {% elif user.seleccion == 'Voleibol' %}
+                                    Salto Vertical: {{ rendimiento.campo1 }}<br>
+                                    Recepción: {{ rendimiento.campo2 }}<br>
+                                    Remate: {{ rendimiento.campo3 }}<br>
+                                    Saque: {{ rendimiento.campo4 }}<br>
+                                    Bloqueo: {{ rendimiento.campo5 }}<br>
+                                {% endif %}
+                                Grasa Corporal: {{ rendimiento.grasa_corporal }}<br>
+                                Masa Muscular: {{ rendimiento.masa_muscular }}<br>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 bg-success text-white text-center p-3"> <!-- Cambia 'bg-primary' a 'bg-success' -->
+                            <h2><strong>{{ rendimiento.rendimiento }}</strong></h2>
+                            <p><strong>Rendimiento Total</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Añade esta línea -->
+            {% endfor %}
+        </div> <!-- Añade esta línea -->
+    </div>
+    {% else %}
+    <p class="fw-light display-5 ">Todavia no tienes ningun rendimiento registrado</p>
+
+    {% endif %}
+    
+    
+</main>

@@ -1,0 +1,92 @@
+<style>
+    .futbol {
+        background-color: #df6262;
+        background: linear-gradient(to right, #df6262, #ff000087); /* Difuminado de gris claro a gris oscuro */
+        color: rgb(0, 0, 0);
+        box-shadow: 0 4px 8px rgba(255, 0, 0, 0.1); /* Sombra */
+        transition: 0.3s; /* Transición suave para el hover */
+
+
+    }
+    .futbol:hover{
+        box-shadow: 0 8px 16px 0 rgba(250, 247, 247, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+
+    }
+
+    .baloncesto {
+        background-color: #84c1d5; /* Azulito celeste */
+        background: linear-gradient(to right, #84c1d5, #00bfffff); /* Difuminado de gris claro a gris oscuro */
+        color: rgb(0, 0, 0);
+        box-shadow: 0 4px 8px rgba(3, 154, 255, 0.1); /* Sombra */
+        transition: 0.3s; /* Transición suave para el hover */
+
+
+    }
+    .baloncesto:hover{
+        box-shadow: 0 8px 16px 0 rgba(250, 247, 247, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+    }
+
+    .voleibol {
+        background-color: #a1e837; /* Amarillo verdoso */
+        background: linear-gradient(to right, #bae37d, #99fc03); /* Difuminado de gris claro a gris oscuro */
+        color: rgb(0, 0, 0);
+        box-shadow: 0 4px 8px rgba(128, 255, 0, 0.1); /* Sombra */
+        transition: 0.3s; /* Transición suave para el hover */
+    }
+
+    .voleibol:hover{
+        box-shadow: 0 8px 16px 0 rgba(250, 247, 247, 0.2); /* Sombra alrededor de la tarjeta cuando se pasa el mouse */
+    }
+</style>
+<main>
+
+<div class="container mt-0">
+    <div class="row flex-wrap">
+        <div class="col-md-auto">
+            <h2>Buscador</h2>
+        </div>
+        <div class="col-md-auto">
+            <form method="GET" action="{% url 'lista_campeonatos' %}" class="d-flex">
+                <input class="form-control me-4" type="text" name="buscar_evento" placeholder="Buscar..." value="{{ request.GET.buscar_evento}}">
+                <input class="form-control me-4" type="date" name="buscar_fecha" placeholder="Buscar por fecha...">
+                <select class="form-select" id="buscar_deporte" name="buscar_deporte">
+                    <option value=""> Filtar por deporte </option>
+                    {% for evento in deportes %}
+                    <option value="{{evento.idDeporte}}"> {{evento.nombre_dep}} </option>
+                    {% endfor %}
+                </select>
+                <br>
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+<br>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for campeonato in campeonatos %}
+            {% if campeonato.estado == None %}
+                {% if campeonato.cupos_disponibles != 0%}
+                    <div class="col">
+                    <div class="card {{ campeonato.idDeporte.nombre_dep|lower }}">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ campeonato.nombre }}</h3>
+                            <p class="card-text">Participantes maximos: <strong>{{ campeonato.tipo }}</strong></p>
+                            <p class="card-text">Cupos restantes: <strong>{{ campeonato.cupos_disponibles }}</strong></p>
+                            <p class="card-text">Inicio: <strong>{{ campeonato.fecha_inicio }}</strong></p>
+                            <p class="card-text">{{campeonato.descripcion}} </p>
+                            <h4 class="card-text"><strong>{{campeonato.idDeporte }}</strong></h4>
+                        {% if user.tipo == 'E' %}
+                            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                <a href="{% url 'inscribir_equipo_acampeonato' campeonato.id %}" class="btn btn-primary">Inscribirse</a>
+                            </div>     
+                        {% endif %}
+                        </div>
+                    </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+</main>

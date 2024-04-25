@@ -1,0 +1,199 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<style>
+    .table-custom {
+        background-color: #2ecc71; /* Verde claro */
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    }
+    .table-custom th, .table-custom td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Aumentar el espaciado interno */
+        color: white;
+    }
+    .table-custom th {
+        text-align: center; /* Centrar el texto en las celdas de encabezado */
+        background-color: #27ae60; /* Verde más oscuro */
+    }
+    .table-custom td {
+        text-align: center; /* Alinear el texto a la izquierda en las celdas de datos */
+    }
+
+    /* Estilos mejorados para la segunda tabla (tipo azulosa) */
+    .table-custom-two {
+        background-color: #3498db; /* Azul claro */
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    }
+    .table-custom-two th, .table-custom-two td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Aumentar el espaciado interno */
+        color: white;
+    }
+    .table-custom-two th {
+        text-align: center; /* Centrar el texto en las celdas de encabezado */
+        background-color: #2980b9; /* Azul más oscuro */
+    }
+    .table-custom-two td {
+        text-align: center; /* Alinear el texto a la izquierda en las celdas de datos */
+    }
+
+    /* Estilos mejorados para los botones */
+    .btn-success, .btn-success-two {
+        background-color: #057333; /* Verde claro */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 6px; /* Bordes redondeados */
+        transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
+    }
+    .btn-success:hover, .btn-success-two:hover {
+        background-color: #27ae60; /* Verde más oscuro */
+    }
+
+    .btn-success-two {
+        background-color: #074975; /* Azul claro */
+    }
+    .btn-success-two:hover {
+        background-color: #2980b9; /* Azul más oscuro */
+    }
+    .btn-success-three {
+    background-color: #FFD700; /* Un dorado-amarillo */
+    border: none;
+    color: black; /* Cambiamos el color del texto a negro para que contraste con el fondo dorado-amarillo */
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px; /* Añadimos bordes redondeados */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); /* Añadimos sombras para darle un aspecto tridimensional */
+    transition: background-color 0.3s ease; /* Añadimos una transición suave al cambiar el color de fondo */
+    }
+
+    .btn-success-three:hover {
+        color: white; /* Cambiamos el color del texto a negro para que contraste con el fondo dorado-amarillo */
+        background-color: #000000; /* Cambiamos el color de fondo a un dorado más claro cuando se pasa el ratón por encima */
+    }
+
+    .escudo-container {
+    position: absolute;
+    top: 50%;
+    right: 20px; /* Ajusta la posición según sea necesario */
+    transform: translateY(-50%);
+    }
+
+    .escudo {
+        max-width: 60px; /* Ajusta el tamaño máximo de la imagen según sea necesario */
+    }
+</style>
+<main>
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-12 mx-auto">
+          <h3 class="fw-light">Aceptar a los equipos a el campeonato: {{ campeonato.nombre }}</h3>
+          <h4 class="fw-light">Cupos: {{ campeonato.cupos_disponibles }}</h4>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2>Equipos Inscritos</h2>
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Fecha creación</th>
+                                <th>Nombre Del Equipo</th>
+                                <th>Lider Del Equipo</th>
+                                <th>Numero de Integrantes</th>
+                                <th>Escudo</th>
+                                <th>Estado</th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for equipo in equipos %}
+                                {% if equipo.estado == 'pendiente' %}
+                                    <tr>
+                                        <td>{{ equipo.equipo.fecha_creacion }}</td>
+                                        <td>{{ equipo.equipo.nombre_eq }}</td>
+                                        <td>{{ equipo.equipo.lider }}</td>
+                                        <td>{{ equipo.equipo.num_integrantes }}</td>
+                                        <td>
+                                            <img src="{{ equipo.equipo.escudo.url }}" class="escudo" alt="Escudo del equipo"> <!-- Imagen del escudo -->
+                                        </td>
+                                        <td>
+                                        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                            <form method="POST" action="{% url 'actualizar_estado_equipo_campeonato' equipo.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn-success">Aceptar</button>
+                                            </form>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2>Equipos Aceptados</h2>
+                    <table class="table-custom-two">
+                        <thead>
+                            <tr>
+                                <th>Fecha creación</th>
+                                <th>Nombre Del Equipo</th>
+                                <th>Lider Del Equipo</th>
+                                <th>Numero de Integrantes</th>
+                                <th>Escudo</th>
+                                <th>Estado</th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for equipo in equipos %}
+                                {% if equipo.estado == 'aceptado' %}
+                                    <tr>
+                                        <td>{{ equipo.equipo.fecha_creacion }}</td>
+                                        <td>{{ equipo.equipo.nombre_eq }}</td>
+                                        <td>{{ equipo.equipo.lider }}</td>
+                                        <td>{{ equipo.equipo.num_integrantes }}</td>
+                                        <td>
+                                            <img src="{{ equipo.equipo.escudo.url }}" class="escudo" alt="Escudo del equipo"> <!-- Imagen del escudo -->
+                                        </td>
+                                        <td>
+                                            <form method="POST" action="{% url 'actualizar_estado_equipo_campeonato' equipo.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn-success-two">Eliminar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <br>
+                    <form method="POST" action="{% url 'creacion_emparejamientos' idd %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-success-three">Crear Campeonato</button>
+                    </form> 
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock  %}
